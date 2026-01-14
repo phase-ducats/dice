@@ -183,6 +183,7 @@
       display: flex;
       gap: 10px;
       align-items: center;
+      margin-left: auto;
     }
 
     .config-icon,
@@ -347,6 +348,49 @@
       margin-top: 10px;
     }
 
+    .stats {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid var(--border-color);
+      transition: border-color 0.3s ease;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .stat-item {
+      background: var(--bg-tertiary);
+      padding: 15px;
+      border-radius: 10px;
+      color: var(--text-primary);
+      transition: background-color 0.3s ease;
+    }
+
+    html:not(.dark-mode) .stat-item {
+      background: #f5f5f5;
+    }
+
+    html.dark-mode .stat-item {
+      background: #3d3d3d;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
     .reset-btn {
       background: #ff6b6b;
       color: white;
@@ -375,7 +419,6 @@
 <body>
   <div class="container">
     <div class="header-container">
-      <h1>🎲 Dice Roller</h1>
       <div class="icon-group">
         <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
         <button class="info-icon" onclick="window.open('https://github.com/phase-ducats/dice', '_blank')"
@@ -391,7 +434,7 @@
     <div class="result" id="result"></div>
     <div class="combined-result" id="combinedResult"></div>
 
-    <button class="roll-button" id="rollBtn" onclick="rollDice()">Roll Dice</button>
+    <button class="roll-button" id="rollBtn" onclick="rollDice()">🎲 Roll</button>
 
     <div class="stats">
       <p style="color: var(--text-secondary); margin-bottom: 10px;">Statistics</p>
