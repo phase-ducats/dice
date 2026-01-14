@@ -6,6 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dice Roller</title>
   <style>
+    :root {
+      --bg-primary: white;
+      --text-primary: #000;
+      --text-secondary: #666;
+      --border-color: #ddd;
+      --hover-bg: rgba(0, 0, 0, 0.05);
+      --gradient-start: #667eea;
+      --gradient-end: #764ba2;
+    }
+
+    html.dark-mode {
+      --bg-primary: #2a2a2a;
+      --text-primary: #f0f0f0;
+      --text-secondary: #9ca3af;
+      --border-color: #4b5563;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+      --gradient-start: #667eea;
+      --gradient-end: #764ba2;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -17,20 +37,24 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
       font-family: 'Arial', sans-serif;
+      transition: background-color 0.3s ease;
     }
 
     .container {
       text-align: center;
-      background: white;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       padding: 50px;
       border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     h1 {
-      color: #333;
+      color: var(--text-primary);
       margin: 0;
       font-size: 32px;
     }
@@ -118,7 +142,7 @@
     }
 
     .roll-button {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
       color: white;
       border: none;
       padding: 15px 40px;
@@ -147,39 +171,6 @@
       transform: none;
     }
 
-    .stats {
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 2px solid #eee;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .stat-item {
-      background: #f5f5f5;
-      padding: 15px;
-      border-radius: 10px;
-      color: #333;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #999;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-
-    .stat-value {
-      font-size: 20px;
-      font-weight: bold;
-      color: #667eea;
-    }
-
     .header-container {
       display: flex;
       justify-content: space-between;
@@ -188,22 +179,70 @@
       gap: 20px;
     }
 
-    .config-icon {
-      width: 40px;
-      height: 40px;
-      background: transparent;
-      border: none;
+    .icon-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .config-icon,
+    .info-icon,
+    .dark-mode-toggle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--text-secondary);
+      background-color: transparent;
+      color: var(--text-secondary);
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 20px;
-      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      opacity: 0;
+      padding: 0;
     }
 
-    .config-icon:hover {
-      transform: scale(1.2);
-      color: #667eea;
+    .container:hover .config-icon,
+    .container:hover .info-icon,
+    .container:hover .dark-mode-toggle {
+      opacity: 1;
+    }
+
+    .config-icon:hover,
+    .info-icon:hover,
+    .dark-mode-toggle:hover {
+      border-color: var(--text-primary);
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary, var(--hover-bg));
+    }
+
+    /* Moon icon (light mode is active) */
+    html:not(.dark-mode) .dark-mode-toggle {
+      background-color: #888888;
+      color: white;
+      border-color: #888888;
+    }
+
+    html:not(.dark-mode) .dark-mode-toggle:hover {
+      background-color: #999999;
+      border-color: #999999;
+      color: white;
+    }
+
+    /* Sun icon (dark mode is active) */
+    html.dark-mode .dark-mode-toggle {
+      background-color: #808080;
+      color: #1a1a1a;
+      border-color: #808080;
+    }
+
+    html.dark-mode .dark-mode-toggle:hover {
+      background-color: #707070;
+      border-color: #707070;
+      color: #1a1a1a;
     }
 
     .modal {
@@ -337,7 +376,12 @@
   <div class="container">
     <div class="header-container">
       <h1>🎲 Dice Roller</h1>
-      <button class="config-icon" onclick="openConfigModal()" title="Configure">⚙️</button>
+      <div class="icon-group">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+        <button class="info-icon" onclick="window.open('https://github.com/phase-ducats/dice', '_blank')"
+          title="GitHub Repository">i</button>
+        <button class="config-icon" onclick="openConfigModal()" title="Configure">⚙️</button>
+      </div>
     </div>
 
     <div class="dice-container">
@@ -350,7 +394,7 @@
     <button class="roll-button" id="rollBtn" onclick="rollDice()">Roll Dice</button>
 
     <div class="stats">
-      <p style="color: #999; margin-bottom: 10px;">Statistics</p>
+      <p style="color: var(--text-secondary); margin-bottom: 10px;">Statistics</p>
       <div class="stats-grid">
         <div class="stat-item">
           <div class="stat-label">Total Rolls</div>
@@ -402,7 +446,16 @@
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', () => {
       renderDices();
+      // Load dark mode preference from localStorage
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark-mode');
+      }
     });
+
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+    }
 
     function renderDices() {
       const container = document.getElementById('dicesContainer');
